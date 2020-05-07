@@ -38,7 +38,7 @@ borg prune \
 passphrase для работы с репозиториями `1234`    
 
 ### Дополнительная информация
-При выполнении задания использовались следующие источники: 
+При выполнении задания использовались следующие источники:   
 borg init --encryption ([link](https://borgbackup.readthedocs.io/en/stable/usage/init.html))  
 borg prune ([link](https://borgbackup.readthedocs.io/en/stable/usage/prune.html))    
 systemd (Русский)/Timers (Русский) ([link](https://wiki.archlinux.org/index.php/Systemd_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)/Timers_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)))  
