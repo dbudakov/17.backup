@@ -1,0 +1,10 @@
+[Unit]
+Description= start backup etc every hour
+
+[Timer]
+OnCalendar=*-*-* *:15:00
+#systemd-analyze calendar *-*-* *:*:00
+#Persistent=true #запускае сервис сразу после включения
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,25 @@
+- name: Deploy files
+  hosts: files
+  gather_facts: false
+  become: yes
+  roles:
+    - role: roles
+  tasks:
+    - include: ../roles/tasks/ssh_files.yml
+    - include: ../roles/tasks/borg.yml
+    - include: ../roles/tasks/sql.yml
+    - include: ../roles/tasks/scripts.yml
+    - include: ../roles/tasks/service.yml
+  handlers:
+    - include: ../roles/handlers/restart_sshd.yml
+
+- name: Deploy backup
+  hosts: backup
+  gather_facts: false
+  become: yes
+  roles:
+    - role: roles
+  tasks:
+    - include: ../roles/tasks/ssh_backup.yml
+    - include: ../roles/tasks/borg.yml
+    - include: ../roles/tasks/init_repo.yml

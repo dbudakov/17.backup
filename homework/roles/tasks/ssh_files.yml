@@ -1,0 +1,26 @@
+- name: Adding users
+  user:
+    name: "{{ item }}"
+    password: "$1$QDyPlph/$oaAX/xNRf3aiW3l27NIUA/"
+    state: present
+    createhome: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+  loop: "{{ users }}"
+
+- name: Get file from remote
+  fetch:
+    src: /{{ item }}/.ssh/id_rsa.pub
+    dest: keys
+  loop: "{{ users_home }}"
+
+- name: Disable check known_hosts
+  shell: echo StrictHostKeyChecking=no >> /etc/ssh/ssh_config
+  notify: restart sshd
+
+- name: Enable ssh PasswordAuthentication
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: "#PasswordAuthentication yes"
+    replace: "PasswordAuthentication yes"
+  notify: restart sshd

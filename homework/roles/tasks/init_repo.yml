@@ -1,0 +1,7 @@
+- name: Install sshpass
+  yum:
+    name: sshpass
+    state: present
+
+- name: Create repo for backups
+  shell: sshpass -p "vagrant" ssh root@files "export BORG_PASSPHRASE=1234 && su borg -c 'borg init -e repokey-blake2 backup:files-etc' && su postgres -c 'borg init -e repokey-blake2 backup:files-sql'"

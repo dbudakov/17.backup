@@ -1,0 +1,25 @@
+- name: Copy services units
+  copy:
+    src: ../templates/{{ item }}.service
+    dest: /lib/systemd/system/{{ item }}.service
+  loop: "{{ srv }}"
+
+- name: Copy timers units
+  copy:
+    src: ../templates/{{ item }}.timer
+    dest: /lib/systemd/system/{{ item }}.timer
+  loop: "{{ srv }}"
+
+- name: сreate /var/log directory
+  file:
+    path: /var/log/{{ item }}
+    state: directory
+  loop: "{{ log_dir }}"
+
+- name: Start timers
+  systemd:
+    daemon_reload: yes
+    name: "{{ item }}.timer"
+    state: started
+    enabled: true
+  loop: "{{ srv }}"

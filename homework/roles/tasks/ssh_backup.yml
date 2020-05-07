@@ -1,0 +1,33 @@
+- name: Adding users
+  user:
+    name: "{{ item }}"
+    password: "$1$QDyPlph/$oaAX/xNRf3aiW3l27NIUA/"
+    state: present
+    createhome: yes
+  loop: "{{ users }}"
+
+- name: сreate ~/.ssh directory
+  file:
+    path: /{{ item }}/.ssh
+    state: directory
+  loop: "{{ users_home }}"
+
+- name: Copy files:id_rsa in backup:authorized_keys
+  copy:
+    src: ./keys/files/{{ item }}/.ssh/id_rsa.pub
+    dest: /{{ item }}/.ssh/authorized_keys
+  loop: "{{ users_home }}"
+
+- name: Adding root-rsa in users authorized_keys
+  shell: |
+    cat /root/.ssh/authorized_keys >> /home/borg/.ssh/authorized_keys
+    cat /root/.ssh/authorized_keys >> /home/postgres/.ssh/authorized_keys
+
+- name: Disable check known_hosts
+  shell: echo StrictHostKeyChecking=no >> /etc/ssh/ssh_config
+
+- name: restart sshd
+  systemd:
+    name: sshd
+    state: restarted
+    enabled: yes

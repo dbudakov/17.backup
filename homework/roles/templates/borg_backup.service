@@ -1,0 +1,9 @@
+#/lib/systemd/system/borg_backup.service
+
+[Unit]
+Description= backup /etc
+
+[Service]
+Type=oneshot
+#EnvironmentFile=/etc/sysconfig/
+ExecStart=/bin/bash /root/scripts/backup-data.sh

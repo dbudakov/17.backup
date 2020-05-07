@@ -1,0 +1,24 @@
+---
+# vars file for roles
+srv:
+  - borg_backup
+  - borg_sql
+
+scripts:
+  - scripts/backup-data.sh
+  - scripts/backup-pg.sh
+  - scripts/borg_mount.sh
+
+users:
+  - borg
+  - postgres
+  - root
+
+users_home:
+  - home/borg
+  - home/postgres
+  - root
+
+log_dir:
+  - backup-etc
+  - backup-sql

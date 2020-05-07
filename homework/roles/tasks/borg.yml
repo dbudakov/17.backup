@@ -1,0 +1,29 @@
+- name: Install BORG
+  get_url:
+    url: https://github.com/borgbackup/borg/releases/download/1.1.11/borg-linux64
+    dest: /usr/bin/borg
+    owner: root
+    group: root
+    mode: "0777"
+
+- name: Disable firewalld
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+
+- name:
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      127.0.0.1       {{ ansible_host }}  {{ ansible_host }}
+      127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+      ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+      192.168.11.150  db
+      192.168.11.151  nginx
+      192.168.11.152  files
+      192.168.11.153  backup

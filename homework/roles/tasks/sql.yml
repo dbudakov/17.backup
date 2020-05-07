@@ -1,0 +1,14 @@
+- name: yum install psql
+  yum:
+    name: postgresql-server
+    state: present
+
+- name: psql initdb
+  shell: postgresql-setup initdb
+  ignore_errors: yes
+
+- name: started psql
+  systemd:
+    name: postgresql
+    state: started
+    enabled: true
