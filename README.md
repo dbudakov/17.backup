@@ -15,8 +15,8 @@
 ** Настроить резервирование логического бекапа базы данных ( база на ваш выбор ) с помощью BorgBackup  
 
 ## Решение 
-Задание выполнено с использованием `ansible`, для запуска скрипта ([скрипт](https://github.com/dbudakov/17.backup/blob/master/homework/scripts/backup-data.sh)) используются юниты `systemctl`(можно посмотреть здесь [service](https://github.com/dbudakov/17.backup/blob/master/homework/roles/templates/borg_backup.service)/[timer](https://github.com/dbudakov/17.backup/blob/master/homework/roles/templates/borg_backup.timer))    
-скрипты после во время деплоя кладутся в `/root/scripts/`, логи собирают вывод результата работы скрипов и кладутся в каталоги `/var/log/backup-etc` и `/var/log/backup-sql`, имена логов аналогичны именам бэкапов и завися от даты  
+Задание выполнено с использованием `ansible`, для запуска скрипта ([скрипт](https://github.com/dbudakov/17.backup/blob/master/homework/scripts/backup-data.sh)) используются юниты `systemctl`(можно посмотреть здесь [service](https://github.com/dbudakov/17.backup/blob/master/homework/roles/templates/borg_backup.service) и [timer](https://github.com/dbudakov/17.backup/blob/master/homework/roles/templates/borg_backup.timer))    
+Cкрипты во время деплоя кладутся в `/root/scripts/`, логи собирают вывод результата работы скрипов и кладутся в каталоги `/var/log/backup-etc` и `/var/log/backup-sql`, имена логов аналогичны именам бэкапов и завися от даты  
 Для проверки на восстановление из бэкапа через `borg mount`, необходимо запустить скрипт с сервера files:  
 ```
 /bin/bash /root/scripts/borg_mount.sh
