@@ -37,7 +37,7 @@ borg prune \
 Все созданные пользователи, а это `borg/postgres`, имеют пароль `vagrant`    
 passphrase для работы с репозиториями `1234`    
 
-### Дополнительная информация
+#### Дополнительная информация
 При выполнении задания использовались следующие источники:   
 borg init --encryption ([link](https://borgbackup.readthedocs.io/en/stable/usage/init.html))  
 borg prune ([link](https://borgbackup.readthedocs.io/en/stable/usage/prune.html))    
