@@ -1,0 +1,19 @@
+# Проверяем состояние MySQL
+if [ $(slave_status) == "Yes"]; then
+  mysql -e 'stop slave;'
+
+# Сбрасываем кэш на диск
+echo 3 > /proc/sys/vm/drop_caches
+
+# Ротируем и создаем снэпшот
+/sbin/lvcreate -s -p r -L${SNAP_SIZE} -n ${SNAP_DAILY_LATEST} ${BLOCK_DEV}
+
+# Можно запускать slave
+mysql -e 'start slave'
+fi
+
+# Запускаем создание бэкапа
+time rsync -av --del --progress ${SNAP_DAILY_MNT} ${BACKUP_DAILY_MNT}/latest
+
+# Удаляем снэпшот
+lvremove -f /dev/${VG}/${SNAP_DAILY_PREVIOUS}

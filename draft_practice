@@ -1,0 +1,25 @@
+
+# необходимо работать из под выделенного пользователя, в случае запуска `borg chek`(верификация репозитория), будет произведено восстановление файлов и владелез файлов будет польлзователь запустивший его, если владелец и пользователь запустивший `borg chek` разные начнуться трудности, решаются через chown
+
+# borg по умолчанию снимает копию только с изменившихся файлов, из-за дедупликации, поэтому нет инкриментальных бэкапов, все бэкапы будут диференциальными. Данный метод не подходит для БД, и предварительно с БД нужно снять дамп. И уже бэкапить файл дампа. Аналогично с wall
+
+files:
+  borg init -e/--entcription
+  borg init -e none backup:files-etc # инициализация на "backup" репозиторий "files-etc"
+  ./backup-data.sh
+  borg init -e none backup:files-pg
+  ./backup-pg.sh
+  borg list backup:files-pg # посмотреть листинг файлов удаленного репозитория
+  borg list backup:files-pg::<name_backup> # листинг самого бэкапа
+  borg list backup:files-etc::<name_backup>
+  borg extract backup:files-etc::<name_backup> # распакует в текущий или заданый каталог
+    cd etc/
+  borg mount backup:files-etc::<name_backup> /mnt # монтирует бэкап в указанный каталог
+    mount | grep borg
+    umount /mnt
+
+
+
+
+backup:
+  borg list files-etc/

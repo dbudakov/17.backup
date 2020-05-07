@@ -1,0 +1,88 @@
+files:
+## cоздание репозитория на
+  borg init -e none backup:files-etc
+
+backup:
+  borg list files-etc/
+
+предпочтение отдается физическим копиям, а не логическим
+
+scripts:
+  добавляются в cron или systemd-timer
+fs:
+  fuse
+  ssh,nfs хранилище
+
+utils:
+  tar
+    tar -czvf nginx_conf.tar.gz /etc/nginx # xvf
+  rsync - для большого кол-ва мал файлов
+    на практике снимали бэкап с БД, но с использованием lvm snapshot
+    cat ./LVM_snapshot_rsync
+      для валидации на бэкап сервере запускается инстанс mysql натравленный на бэкап директорию, производится синтетический тест
+      доп.инфа: https://www.percona.com/blog/2006/08/21/using-lvm-for-mysql-backup-and-replication-setup/
+    имеется демон для rsync, для копированя больших файлов(7ТБ)
+    /etc/rsync.conf # конфиги демона rsyncd
+    rsync -avz --delete /etc/ /mnt/backup/hostname/etc
+    rsync -az -e -ssh --delete 192.168.2.1:/etc/nginx/ /etc/nginx
+    rsync -av --stats --bwlimit=10240 --delete --progress 10.100.210.11::main /data/backup/mysql/main
+  rsync + inotify = lsyncd
+  dump
+  dd
+  restore
+
+software:
+  bacula/bareos(для журнала разворачивает свою БД: mysql,pg,sqlite)
+    yum install bacula-{client,console,director,storage}
+  borgbackup/restic
+    позволяет шифровать репозиторий(key,passphrase)
+  rsync
+  rsnapshot
+  urbackup
+
+version files:
+  git lfs - сервер системой управления конфигурациями
+  VCS[Version Control System,](cvs, git, svn, mercurial,bazaar)
+  etckeeper - автоматизация vcs
+    yum install etckeeper
+      перед установкой желательно установить git
+
+db:
+  MySQL: mysql_dump(box,log), mydumper(log), xtrabackup, lvm-snapshots
+  PostgreSQL: pg_basebackup(box,phys), pg_probackup(rus), wal-g(e)(cloud,speed), barman(централизовано), lvm-snapshots etc
+  pg dumpall - логическая копия, всего кластера, всех БД, в том числе и системных вью, пользователей и грантов
+  xtrabackup- mysql
+    xtrabackup --backup --datadir=/var/lib/mysql/ --target-dir=/data/backups/mysql/
+
+PostgreSQL:
+  PG_Probackup
+    - есть возможность снимать бэкап с удалённого хоста
+    - легко оборачивается скрипты
+    - снимать бэкап со стенд-бай хоста, но идет дольше, из-за ротации журнала транзакций
+    - --validate, --validate amchek, check db (из коробки)
+    - differential backup без проблем
+    - совмещается с pg_receivewal
+
+  WAl-G
+    - очень быстро работает
+    - из коробки умеет работать с Amazon S3
+    - Full, Diff, Increment
+    - совмещается с pg_receivewal
+
+  Безопасность:
+    Если канал резервного копирования может быть прослушан, то нужны средства шифрования.
+    Если вскрыли сервер или хранилище, нужно ограничить права пользователя работающего с бэкапами, на удаление и изменение файлов
+
+
+Дополнительные материалы
+  кеши CMS - желательно не копировать, много фалов, отсутствие не сказывается
+  GTID
+  git-lab runner - альтернатива ansible
+  coresync/pacemaker - умеют шарить память между хостами БД
+  master + slave + отстающая реплика(не выполняет транзакций младше какого-то периода)
+
+validate:
+  раз в сутки полный бэкап, после завершения бэкапа, резервная копия восстанавливается локально, запускается(docker/min), проверяем доступ, проверям принимает ли подключения и что он НЕ в режиме восстановления, запускаются check'и:
+    - логический дамп в /dev/null, нужен для сверки md5-sum каждой таблицы/страницы, если с суммами что-то не так, то дамп вывалится с ошибкой
+    - запуск функционала --validate
+    - перед бэкапов на хосте в БД в системную таблицу записываются данные о кол-ве строк в опр табл, рядом в табицу кладем кол-ва строк после бэкапа и аллертим если она отличаются больше чем на 1000
