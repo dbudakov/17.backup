@@ -12,5 +12,7 @@ assemble ansible ([link](https://docs.ansible.com/ansible/latest/modules/assembl
 Могу ли я автоматически добавить новый хост в known_hosts? ([link](https://qastack.ru/server/132970/can-i-automatically-add-a-new-host-to-known-hosts))  
 Как игнорировать проверку подлинности SSH? ([link](https://issue.life/questions/32297456))  
 автоПАРОЛЬ ssh ([link](https://forum.ubuntu.ru/index.php?topic=220985.0))  
-Как передать пароль команде ssh / scp в Bash скрипте ([link](https://itsecforu.ru/2019/02/13/%D0%BA%D0%B0%D0%BA-%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%D0%B0%D1%82%D1%8C-%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C-%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B5-ssh-scp-%D0%B2-bash-%D1%81%D0%BA%D1%80%D0%B8%D0%BF/)) 
+Как передать пароль команде ssh / scp в Bash скрипте ([link](https://itsecforu.ru/2019/02/13/%D0%BA%D0%B0%D0%BA-%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%D0%B0%D1%82%D1%8C-%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C-%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B5-ssh-scp-%D0%B2-bash-%D1%81%D0%BA%D1%80%D0%B8%D0%BF/))  
+
+[Теория и практика бэкапов с Borg](https://m.habr.com/ru/company/flant/blog/420055/)  
 
